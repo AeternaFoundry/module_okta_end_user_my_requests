@@ -22,5 +22,13 @@ EOT
       values = optional(list(string))
     })))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.end_user_my_requests : (
+        v.requester_field_values == null || alltrue([for item in v.requester_field_values : (item.type == null || (contains(["DURATION", "ISO_DATE", "MULTISELECT", "OKTA_USER_ID", "SELECT", "TEXT"], item.type)))])
+      )
+    ])
+    error_message = "must be one of: \"DURATION\", \"ISO_DATE\", \"MULTISELECT\", \"OKTA_USER_ID\", \"SELECT\", \"TEXT\""
+  }
 }
 
